@@ -11,4 +11,5 @@ class ConverterViewSet(ViewSet):
 
     @action(methods=["POST"], detail=False, url_path="convert")
     def convert(self, request, **kwargs):
-        return Response({})
+        file = request.FILES["file"].read().decode("utf-8")
+        return Response({"content": file})

@@ -6,5 +6,9 @@
             When they click on the submit button, the XML file should be converted into JSON and
             returned to the user.
         </p>
+        <form action="/connected/" method="POST" enctype="multipart/form-data">{%csrf_token%}
+            <input type="file" name="file"/>
+            <button type="submit">Submit</button>
+        </form>
     </body>
 </html>
