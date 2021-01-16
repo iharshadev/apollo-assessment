@@ -2,7 +2,6 @@ from pathlib import Path
 
 from django.test import TestCase, Client
 
-
 TEST_DIR = Path(__file__).parent / Path('test_files')
 
 
@@ -56,4 +55,92 @@ class XMLConversionTestCase(TestCase):
                         ]
                     },
                 ],
+            })
+
+    def test_connected_convert_people(self):
+        with (TEST_DIR / Path('people.xml')).open() as fp:
+            response = self.client.post('/connected/', {
+                'file': fp,
+            })
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.json(), {
+                "Contactes": [
+                    {
+                        "Contact": [
+                            {
+                                "LastName": "Doe"
+                            },
+                            {
+                                "FirstName": "John"
+                            },
+                            {
+                                "Address": [
+                                    {
+                                        "StreetLine1": "123 Main St."
+                                    },
+                                    {
+                                        "StreetLine2": "Suite 400"
+                                    },
+                                    {
+                                        "City": "San Francisco"
+                                    },
+                                    {
+                                        "State": "CA"
+                                    },
+                                    {
+                                        "PostCode": "94103"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "Contact": [
+                            {
+                                "LastName": "Doe"
+                            },
+                            {
+                                "FirstName": "Jane"
+                            },
+                            {
+                                "Address": [
+                                    {
+                                        "Type": "Permanent"
+                                    },
+                                    {
+                                        "StreetLine1": "400 Market St."
+                                    },
+                                    {
+                                        "City": "San Francisco"
+                                    },
+                                    {
+                                        "State": "CA"
+                                    },
+                                    {
+                                        "PostCode": "94108"
+                                    }
+                                ]
+                            },
+                            {
+                                "Address": [
+                                    {
+                                        "Type": "Mailing"
+                                    },
+                                    {
+                                        "StreetLine1": "400 Market St."
+                                    },
+                                    {
+                                        "City": "San Francisco"
+                                    },
+                                    {
+                                        "State": "CA"
+                                    },
+                                    {
+                                        "PostCode": "94108"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
             })
