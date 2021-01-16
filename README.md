@@ -53,10 +53,10 @@ should be converted to
 The tests provide additional examples of more complex conversions.
 
 <h1 align="center">Solution (Harsha's submission)</h1>
-This implementation serves to supposed to be an improvement over that of the branch `xml-etree` in terms of transforming
+This implementation is supposed to serve as an improvement over that of the branch `xml-etree` in terms of transforming
  the XML file into a JSON object with the same structure/schema.
 
-Loading the full contents of the entire XML file can get overwhelming on system memory as the size of the XML file grows.
+Loading the full contents of the entire XML file can get **overwhelming on system memory** as the size of the XML file grows.
 
 One solution is to process the XML file in chunks/streams and roll this window until EOF is reached. Python's
  `xml.etree.ElementTree` offers the [Pull API](https://docs.python.org/3/library/xml.etree.elementtree.html#pull-api-for-non-blocking-parsing) for the same purpose 
