@@ -51,3 +51,49 @@ should be converted to
 ```
 
 The tests provide additional examples of more complex conversions.
+
+<h1 align="center">Solution (Submitted By: Harsha)</h1>
+
+## Changes made
+1. `/templates/upload_page.html` - Added a form with upload and submit button to upload the XML file.
+2. `/static/styles.css` - Created the static directory for the css file. Imported this in the template html file by
+slightly modifying `exercise/settings.py`
+3. `/xml_converter/views.py` & `/xml_converter/api.py` - Added the method `traverse_recursive` to iterate over an 
+XML file node wise and populate a dictionary object which can then be returned as an HTTPResponse with `application/json`
+content type
+## XML parsing
+In this version of the solution, I've used Python's built in [xml.etree](https://docs.python.org/3/library/xml.etree.elementtree.html)
+library ONLY to identify nodes. Rest of the logic has been implemented on my own. 
+
+I've used the below algorithm/workflow/pseudocode to transform XML to JSON
+```bash
+Traverse(node)
+    IF node IS leaf:
+        return {Tag: Value}
+    ELSE:
+        // Recursively process children and add their returned values to a list
+        children = []
+        FOREACH child under node:
+            children += Traverse(child)
+        // return a JSON with first child's tag name in plural form as key and the list of processed children as value
+``` 
+## Important Observations/Notes
+* As per the given examples, there is a special scenario involved with the `<Root>` tag as explained below
+    1. When the `<Root>` tag has no children, the returned JSON should be `{"Root":""}`
+    2. When the `<Root>` tag contains children, the `<Root>` tag is omitted in the JSON response
+
+The first one is an edge case and has been handled in the `traverse_recursive()` method
+
+* Serializing the Dictionary into a JSON response - This implementation does not use a Model to transform XML into JSON. 
+Therefore `django.core.serializers` is not used as they are more suited to transform Models linked with database objects 
+
+## Tests
+This implementation passes all the test cases provided in the template as well as a few additional test cases added by me.
+
+## Challenges
+1. Understanding the usage of static files to style the html form - Django's documentation encourages `app` level templates.
+Since this project had used project root level template, getting that to work took a fair bit of time.
+
+2. Once the XML file is uploaded, the contents of the entire `InMemoryUploadedFile` is being read at once - This is not recommended
+as per Django's [documentation](https://docs.djangoproject.com/en/3.1/ref/files/uploads/#django.core.files.uploadedfile.UploadedFile.read)
+as any file larger than 2.5MB is recommended be read in multiple chunks (although this limit can be increased in the config)

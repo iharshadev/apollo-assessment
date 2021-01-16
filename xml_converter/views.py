@@ -7,8 +7,16 @@ from django.shortcuts import render
 def upload_page(request):
     if request.method == 'POST':
         file = request.FILES["file"].read().decode("utf-8")
-        result = traverse_recursive(ET.fromstring(file))
-        return JsonResponse(result)
+        try:
+            xml_content = ET.fromstring(file)
+            result = traverse_recursive(xml_content)
+            return JsonResponse(result)
+        except ET.ParseError as pe:
+            return JsonResponse({
+                "Error": pe.msg,
+                "Type": "Malformed XML file"
+            })
+
     return render(request, "upload_page.html")
 
 

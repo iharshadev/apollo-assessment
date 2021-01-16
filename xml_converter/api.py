@@ -14,7 +14,14 @@ class ConverterViewSet(ViewSet):
     @action(methods=["POST"], detail=False, url_path="convert")
     def convert(self, request, **kwargs):
         file = request.FILES["file"].read().decode("utf-8")
-        return Response(self.traverse_recursive(ET.fromstring(file)), content_type="application/json")
+        try:
+            xml_content = ET.fromstring(file)
+            return Response(self.traverse_recursive(xml_content), content_type="application/json")
+        except ET.ParseError as pe:
+            return Response({
+                "Error": pe.msg,
+                "Type": "Malformed XML file"
+            }, content_type="application/json")
 
     def traverse_recursive(self, node):
         if node.tag.lower() == "root" and len(node) == 0:
