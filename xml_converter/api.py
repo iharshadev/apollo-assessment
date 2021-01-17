@@ -42,17 +42,19 @@ class StreamParser:
         @param element: Contains XML Tag name and the text it holds
         """
         if event == "start":
-            self.stack.append({"tag": element.tag, "value": element.text})
+            self.stack.append({element.tag: element.text})
         else:
             leaf_node = self.stack.pop()
-            if leaf_node["tag"] == element.tag:
+            leaf_node_tag, leaf_node_value = list(leaf_node.items()).pop()
+            if leaf_node_tag == element.tag:
                 try:
                     parent_node = self.stack.pop()
-                    if type(parent_node["value"]) is list:
-                        parent_node["value"].append(leaf_node)
+                    parent_node_tag, parent_node_value = list(parent_node.items()).pop()
+                    if type(parent_node_value) is list:
+                        parent_node_value.append(leaf_node)
                     else:
-                        parent_node["value"] = [leaf_node]
-                    self.stack.append(parent_node)
+                        parent_node_value = [leaf_node]
+                    self.stack.append({parent_node_tag: parent_node_value})
                 except IndexError:
                     self.logger.warning("Reached EOF of the XML file. File parsed")
                     self.stack = leaf_node
