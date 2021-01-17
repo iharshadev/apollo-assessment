@@ -105,51 +105,39 @@ key is the Root tag and the value is a the rest of the contents nested in the sa
 Eg: The output of the `/connected/` API with `xml_converter/test_files/addresses.xml` as input is
 ```javascript
 {
-  "tag": "Root",
-  "value": [
+  "Root": [
     {
-      "tag": "Address",
-      "value": [
+      "Address": [
         {
-          "tag": "StreetLine1",
-          "value": "123 Main St."
+          "StreetLine1": "123 Main St."
         },
         {
-          "tag": "StreetLine2",
-          "value": "Suite 400"
+          "StreetLine2": "Suite 400"
         },
         {
-          "tag": "City",
-          "value": "San Francisco"
+          "City": "San Francisco"
         },
         {
-          "tag": "State",
-          "value": "CA"
+          "State": "CA"
         },
         {
-          "tag": "PostCode",
-          "value": "94103"
+          "PostCode": "94103"
         }
       ]
     },
     {
-      "tag": "Address",
-      "value": [
+      "Address": [
         {
-          "tag": "StreetLine1",
-          "value": "400 Market St."
+          "StreetLine1": "400 Market St."
         },
         {
-          "tag": "City",
-          "value": "San Francisco"
+          "City": "San Francisco"
         },
         {
-          "tag": "State",
-          "value": "CA"
+          "State": "CA"
         },
         {
-          "tag": "PostCode",
-          "value": "94108"
+          "PostCode": "94108"
         }
       ]
     }
