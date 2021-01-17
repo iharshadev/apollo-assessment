@@ -97,3 +97,8 @@ Since this project had used project root level template, getting that to work to
 2. Once the XML file is uploaded, the contents of the entire `InMemoryUploadedFile` is being read at once - This is not recommended
 as per Django's [documentation](https://docs.djangoproject.com/en/3.1/ref/files/uploads/#django.core.files.uploadedfile.UploadedFile.read)
 as any file larger than 2.5MB is recommended be read in multiple chunks (although this limit can be increased in the config)
+
+## Git workflow
+I've implemented the solution in two approaches each in their own branch which picture summarizes 
+![](./branch-workflow.png)
+*Generated using [gitgraph-js](https://github.com/nicoespeon/gitgraph.js/tree/master/packages/gitgraph-js)*
