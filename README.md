@@ -171,3 +171,8 @@ Approach|Memory usage|Complexity|Flexibilty|Access to children nodes?|Schema der
 ---|---|---|---|---|---
 ElementTree from string|High(entire XML file is read at once)|Linear - N (no. of leaf nodes)|Good|Yes|Yes
 Pull API|Low(Part of the file is read at once)|Linear - N (no. of leaf nodes)|Poor - Need to explicitly maintain state to deduce certain conclusions|No|No
+
+## Git workflow
+I've implemented the solution in two approaches each in their own branch which picture summarizes 
+![](./branch-workflow.png)
+*Generated using [gitgraph-js](https://github.com/nicoespeon/gitgraph.js/tree/master/packages/gitgraph-js)*
