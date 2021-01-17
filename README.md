@@ -97,7 +97,7 @@ In summary, this algorithm does the following:
     * pop the stack again to get the parent tag of the current tag
     * push the current element into it's parent element making it a list of chilren elements
     
-This algorithm is implemented as a method `buil()` in the class `StreamParser` in `/xml_converter/views.py`.
+This algorithm is implemented as a method `build()` in the class `StreamParser` in `/xml_converter/views.py`.
 Each chunk of data read from the XML file in `request` is passed to this method until no chunks of data is left to read.
 At the end of traversing the XML file chunk by chunk, the stack would be populated as a list with one dictionary where the 
 key is the Root tag and the value is a the rest of the contents nested in the same manner as the XML file

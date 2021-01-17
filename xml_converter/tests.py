@@ -2,7 +2,6 @@ from pathlib import Path
 
 from django.test import TestCase, Client
 
-
 TEST_DIR = Path(__file__).parent / Path('test_files')
 
 
@@ -56,4 +55,16 @@ class XMLConversionTestCase(TestCase):
                         ]
                     },
                 ],
+            })
+
+    def test_api_convert_malformed(self):
+        with (TEST_DIR / Path('malformed.xml')).open() as fp:
+            response = self.client.post('/api/converter/convert/', {
+                'file': fp
+            })
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.json(), {
+                "error": "Malformed XML",
+                "msg": "mismatched tag: line 9, column 6",
+                "status_code": "500"
             })

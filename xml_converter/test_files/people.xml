@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<Root>
+    <Contact>
+        <LastName>Doe</LastName>
+        <FirstName>John</FirstName>
+        <Address>
+            <StreetLine1>123 Main St.</StreetLine1>
+            <StreetLine2>Suite 400</StreetLine2>
+            <City>San Francisco</City>
+            <State>CA</State>
+            <PostCode>94103</PostCode>
+        </Address>
+    </Contact>
+    <Contact>
+        <LastName>Doe</LastName>
+        <FirstName>Jane</FirstName>
+        <Address>
+            <Type>Permanent</Type>
+            <StreetLine1>400 Market St.</StreetLine1>
+            <City>San Francisco</City>
+            <State>CA</State>
+            <PostCode>94108</PostCode>
+        </Address>
+        <Address>
+            <Type>Mailing</Type>
+            <StreetLine1>400 Market St.</StreetLine1>
+            <City>San Francisco</City>
+            <State>CA</State>
+            <PostCode>94108</PostCode>
+        </Address>
+    </Contact>
+</Root>

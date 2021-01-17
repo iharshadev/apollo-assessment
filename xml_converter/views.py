@@ -8,59 +8,50 @@ import logging
 def upload_page(request):
     if request.method == 'POST':
         try:
-            # saved_filename = save_uploaded_file(request.FILES["file"])
-            result = pullparse(request.FILES["file"])
+            pull_parser = ET.XMLPullParser(["start", "end"])
+            stream_parser = StreamParser()
+
+            for chunk in request.FILES["file"].chunks():
+                # Look for events in the read chunk
+                pull_parser.feed(chunk)
+                # Iterate through events found
+                for event, element in pull_parser.read_events():
+                    stream_parser.build(event, element)
+            result = stream_parser.stack
             return JsonResponse(result)
         except ET.ParseError as pe:
-            return JsonResponse({"Error": pe.msg})
+            return JsonResponse({"error": "Malformed XML", "message": pe.msg, "status_code": "500"})
     return render(request, "upload_page.html")
 
 
-logger = logging.getLogger(__name__)
-
-
-def save_uploaded_file(file):
-    filename = file.name.replace(".xml", f"-{int(datetime.now().timestamp())}.xml")
-    filename = f"static/uploaded-files/{filename}"
-    with open(filename, "wb+") as target:
-        for chunk in file.chunks():
-            target.write(chunk)
-    return filename
-
-
-def pullparse(file):
-    pull_parser = ET.XMLPullParser(["start", "end"])
-    stream_parser = StreamParser()
-
-    for chunk in file.chunks():
-        # Look for events in the read chunk
-        pull_parser.feed(chunk)
-        # Iterate through events found
-        for event, element in pull_parser.read_events():
-            stream_parser.build(event, element)
-    result = stream_parser.stack
-    return result
-
-
-class StreamParser():
+class StreamParser:
     def __init__(self):
+        """
+        Constructor: Initializes the main stack needed to build the JSON
+        """
         self.stack = []
+        self.logger = logging.getLogger(__name__)
 
     def build(self, event, element):
+        """
+        Incrementally build a Dictionary from an XML file that is read chunk by chunk
+        @param event: Event type [start, end]
+        @param element: Contains XML Tag name and the text it holds
+        """
         if event == "start":
-            self.stack.append({"tag": element.tag, "value": element.text.strip()})
+            self.stack.append({"tag": element.tag, "value": element.text})
         else:
-            top_item = self.stack.pop()
-            if top_item["tag"] == element.tag:
+            leaf_node = self.stack.pop()
+            if leaf_node["tag"] == element.tag:
                 try:
-                    previous_item = self.stack.pop()
-                    if type(previous_item["value"]) is list:
-                        previous_item["value"].append(top_item)
+                    parent_node = self.stack.pop()
+                    if type(parent_node["value"]) is list:
+                        parent_node["value"].append(leaf_node)
                     else:
-                        previous_item["value"] = [top_item]
-                    self.stack.append(previous_item)
+                        parent_node["value"] = [leaf_node]
+                    self.stack.append(parent_node)
                 except IndexError:
-                    logger.warning("Reached EOF of the XML file. File parsed")
-                    self.stack = top_item
+                    self.logger.warning("Reached EOF of the XML file. File parsed")
+                    self.stack = leaf_node
             else:
-                logger.warning("Malformed XML")
+                self.logger.warning("Malformed XML")
